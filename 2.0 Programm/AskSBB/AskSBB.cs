@@ -17,24 +17,28 @@ namespace AskSBB
         TextBox activeTxtBox = null;
         string stationID = null;
         string fixDestination = "Ebikon,St.Klemens";
-        
 
         public AskSBB()
         {
             InitializeComponent();
             timeTxtBox.Text = DateTime.Now.ToShortTimeString();
+            dateTimePicker.Text = DateTime.Now.ToLongDateString();
         }
 
         private void fromTxtBox_TextChanged(object sender, EventArgs e)
         {
+            CheckString(fromTxtBox.Text);
             activeTxtBox = fromTxtBox;
             ShowStations(fromTxtBox.Text);
+            searchBtn.Enabled = true;
         }
 
         private void toTxtBox_TextChanged(object sender, EventArgs e)
         {
+            CheckString(toTxtBox.Text);
             activeTxtBox = toTxtBox;
             ShowStations(toTxtBox.Text);
+            searchBtn.Enabled = true;
         }
 
         private void chooseLstBox_Click(object sender, EventArgs e)
@@ -46,7 +50,8 @@ namespace AskSBB
 
         private void searchBtn_Click(object sender, EventArgs e)
         {
-            if(connectionsRdoBtn.Checked == true)
+            CheckString(timeTxtBox.Text);
+            if (connectionsRdoBtn.Checked == true)
             {
                 ShowResults(fromTxtBox.Text, toTxtBox.Text, timeTxtBox.Text);
             }
@@ -68,9 +73,9 @@ namespace AskSBB
             }
         }
 
-        private void ShowResults(string source, string destination, string time)
+        private void ShowResults(string source, string destination, string timeDate)
         {
-            Connections connectionList = transport.GetConnections(source, destination);
+            Connections connectionList = transport.GetConnections(source, destination, dateTimePicker.Text, timeTxtBox.Text);
 
             resultsDGV.Rows.Clear();
             resultsDGV.Columns.Clear();
@@ -111,9 +116,14 @@ namespace AskSBB
 
         private void ShowDepartures(string source)
         {
-            Connections connectionList = transport.GetConnections(source, fixDestination);
+            Connections connectionList = transport.GetConnections(source, fixDestination, dateTimePicker.Text, timeTxtBox.Text);
 
-            foreach(Connection con in connectionList.ConnectionList)
+            if (fixDestination == "Ebikon,St.Klemens")
+            {
+                fixDestination = "Luzern,Maihof";
+            }
+
+            foreach (Connection con in connectionList.ConnectionList)
             {
                 stationID = con.From.Station.Id;
             }
@@ -154,5 +164,39 @@ namespace AskSBB
 
         }
 
+        private void CheckString(string check)
+        {
+            if (!System.Text.RegularExpressions.Regex.IsMatch(check, "^[a-zA-Z]"))
+            {
+                Errors(1);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void CheckTime(string check)
+        {
+            if (!System.Text.RegularExpressions.Regex.IsMatch(check, "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"))
+            {
+                Errors(3);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void Errors(int number)
+        {
+            switch (number)
+            {
+                case 1: MessageBox.Show("Bitte keine Zahlen oder Sonderzeichen verwenden"); break;
+                case 2: MessageBox.Show("Bitte keine Sonderzeichen verwenden"); break;
+                case 3: MessageBox.Show("Bitte geben Sie eine gültige Uhrzeit an!"); break;
+                default: MessageBox.Show("Diese Fehlermeldung wurde noch nicht programmiert"); break;
+            }
+        }
     }
 }
