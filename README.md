@@ -1,6 +1,5 @@
-# modul-318-Student
+# Modul 318 - Projekt "AskSBB" - Author: Amol Ming
 
-Students!
-Fork this repository to your own Github account. Work there with this repository. The intructor will clone your repo for inspection and evaluation.
+This Project got builded in the intercompanycourse 318.
 
 Have Fun!
