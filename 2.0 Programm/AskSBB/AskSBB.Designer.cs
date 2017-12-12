@@ -40,8 +40,9 @@
             this.toTxtBox = new System.Windows.Forms.TextBox();
             this.resultsDGV = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.nearRdoBtn = new System.Windows.Forms.RadioButton();
+            this.tableRdoBtn = new System.Windows.Forms.RadioButton();
             this.connectionsRdoBtn = new System.Windows.Forms.RadioButton();
+            this.resetBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.resultsDGV)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -97,14 +98,13 @@
             // 
             this.timeTxtBox.Location = new System.Drawing.Point(89, 199);
             this.timeTxtBox.Name = "timeTxtBox";
-            this.timeTxtBox.Size = new System.Drawing.Size(57, 20);
+            this.timeTxtBox.Size = new System.Drawing.Size(200, 20);
             this.timeTxtBox.TabIndex = 4;
             this.timeTxtBox.Text = "HH:MM";
             // 
             // searchBtn
             // 
-            this.searchBtn.Enabled = false;
-            this.searchBtn.Location = new System.Drawing.Point(534, 172);
+            this.searchBtn.Location = new System.Drawing.Point(565, 141);
             this.searchBtn.Margin = new System.Windows.Forms.Padding(2);
             this.searchBtn.Name = "searchBtn";
             this.searchBtn.Size = new System.Drawing.Size(76, 28);
@@ -126,8 +126,9 @@
             this.chooseLstBox.FormattingEnabled = true;
             this.chooseLstBox.Location = new System.Drawing.Point(314, 36);
             this.chooseLstBox.Name = "chooseLstBox";
-            this.chooseLstBox.Size = new System.Drawing.Size(201, 95);
+            this.chooseLstBox.Size = new System.Drawing.Size(201, 186);
             this.chooseLstBox.TabIndex = 10;
+            this.chooseLstBox.Visible = false;
             this.chooseLstBox.Click += new System.EventHandler(this.chooseLstBox_Click);
             // 
             // toTxtBox
@@ -143,29 +144,30 @@
             this.resultsDGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.resultsDGV.Location = new System.Drawing.Point(33, 252);
             this.resultsDGV.Name = "resultsDGV";
-            this.resultsDGV.Size = new System.Drawing.Size(614, 197);
+            this.resultsDGV.Size = new System.Drawing.Size(639, 197);
             this.resultsDGV.TabIndex = 12;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.nearRdoBtn);
+            this.groupBox1.Controls.Add(this.tableRdoBtn);
             this.groupBox1.Controls.Add(this.connectionsRdoBtn);
-            this.groupBox1.Location = new System.Drawing.Point(534, 29);
+            this.groupBox1.Location = new System.Drawing.Point(534, 36);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(138, 100);
+            this.groupBox1.Size = new System.Drawing.Size(138, 78);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
-            // nearRdoBtn
+            // tableRdoBtn
             // 
-            this.nearRdoBtn.AutoSize = true;
-            this.nearRdoBtn.Location = new System.Drawing.Point(7, 44);
-            this.nearRdoBtn.Name = "nearRdoBtn";
-            this.nearRdoBtn.Size = new System.Drawing.Size(81, 17);
-            this.nearRdoBtn.TabIndex = 6;
-            this.nearRdoBtn.TabStop = true;
-            this.nearRdoBtn.Text = "In der Nähe";
-            this.nearRdoBtn.UseVisualStyleBackColor = true;
+            this.tableRdoBtn.AutoSize = true;
+            this.tableRdoBtn.Location = new System.Drawing.Point(7, 44);
+            this.tableRdoBtn.Name = "tableRdoBtn";
+            this.tableRdoBtn.Size = new System.Drawing.Size(84, 17);
+            this.tableRdoBtn.TabIndex = 6;
+            this.tableRdoBtn.TabStop = true;
+            this.tableRdoBtn.Text = "Abfahrtstafel";
+            this.tableRdoBtn.UseVisualStyleBackColor = true;
+            this.tableRdoBtn.CheckedChanged += new System.EventHandler(this.tableRdoBtn_CheckedChanged);
             // 
             // connectionsRdoBtn
             // 
@@ -178,12 +180,25 @@
             this.connectionsRdoBtn.TabStop = true;
             this.connectionsRdoBtn.Text = "Verbindungen";
             this.connectionsRdoBtn.UseVisualStyleBackColor = true;
+            this.connectionsRdoBtn.CheckedChanged += new System.EventHandler(this.connectionsRdoBtn_CheckedChanged);
+            // 
+            // resetBtn
+            // 
+            this.resetBtn.Location = new System.Drawing.Point(565, 194);
+            this.resetBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.resetBtn.Name = "resetBtn";
+            this.resetBtn.Size = new System.Drawing.Size(76, 28);
+            this.resetBtn.TabIndex = 14;
+            this.resetBtn.Text = "Reset";
+            this.resetBtn.UseVisualStyleBackColor = true;
+            this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
             // 
             // AskSBB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(684, 531);
+            this.ClientSize = new System.Drawing.Size(696, 470);
+            this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.resultsDGV);
             this.Controls.Add(this.toTxtBox);
@@ -220,8 +235,9 @@
         private System.Windows.Forms.TextBox toTxtBox;
         private System.Windows.Forms.DataGridView resultsDGV;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton nearRdoBtn;
+        private System.Windows.Forms.RadioButton tableRdoBtn;
         private System.Windows.Forms.RadioButton connectionsRdoBtn;
+        private System.Windows.Forms.Button resetBtn;
     }
 }
 

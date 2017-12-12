@@ -11,12 +11,16 @@ using SwissTransport;
 
 namespace AskSBB
 {
+
+    // Initialisieren des Programms
     public partial class AskSBB : Form
     {
+        // Initialisieren von globalen Variablen und Verbindungen
         Transport transport = new Transport();
         TextBox activeTxtBox = null;
         string stationID = null;
         string fixDestination = "Ebikon,St.Klemens";
+        string limit = "5";
 
         public AskSBB()
         {
@@ -25,43 +29,69 @@ namespace AskSBB
             dateTimePicker.Text = DateTime.Now.ToLongDateString();
         }
 
+
+    // Aktionen von Usern
         private void fromTxtBox_TextChanged(object sender, EventArgs e)
         {
-            CheckString(fromTxtBox.Text);
+            chooseLstBox.Visible = true;
             activeTxtBox = fromTxtBox;
             ShowStations(fromTxtBox.Text);
-            searchBtn.Enabled = true;
         }
 
         private void toTxtBox_TextChanged(object sender, EventArgs e)
         {
-            CheckString(toTxtBox.Text);
+            chooseLstBox.Visible = true;
             activeTxtBox = toTxtBox;
             ShowStations(toTxtBox.Text);
-            searchBtn.Enabled = true;
         }
 
         private void chooseLstBox_Click(object sender, EventArgs e)
         {
             activeTxtBox.Text = chooseLstBox.SelectedItem.ToString();
             chooseLstBox.Items.Clear();
-            
+            chooseLstBox.Visible = false;
+        }
+
+        private void connectionsRdoBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            fromLbl.Text = "Von";
+            toLbl.Visible = true;
+            toTxtBox.Visible = true;
+        }
+
+        private void tableRdoBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            fromLbl.Text = "Ortschaft";
+            toLbl.Visible = false;
+            toTxtBox.Visible = false;
         }
 
         private void searchBtn_Click(object sender, EventArgs e)
         {
-            CheckString(timeTxtBox.Text);
             if (connectionsRdoBtn.Checked == true)
             {
+                CheckString(fromTxtBox.Text);
+                CheckString(toTxtBox.Text);
+                CheckTime(timeTxtBox.Text);
                 ShowResults(fromTxtBox.Text, toTxtBox.Text, timeTxtBox.Text);
             }
-            else if(nearRdoBtn.Checked == true)
+            else if (tableRdoBtn.Checked == true)
             {
                 ShowDepartures(fromTxtBox.Text);
             }
         }
 
-        private void ShowStations(string searchQuery)
+        private void resetBtn_Click(object sender, EventArgs e)
+        {
+            toTxtBox.Clear();
+            fromTxtBox.Clear();
+            timeTxtBox.Text = DateTime.Now.ToShortTimeString();
+            dateTimePicker.Text = DateTime.Now.ToLongDateString();
+            connectionsRdoBtn.Checked = true;
+        }
+
+        // Funktion ShowStations - Sucht Stationen
+    private void ShowStations(string searchQuery)
         {
             Stations stationList = transport.GetStations(searchQuery);
 
@@ -73,9 +103,10 @@ namespace AskSBB
             }
         }
 
+        // Funktion ShowResults - Liefert die Ergebnisse ins Grid für Verbindungen
         private void ShowResults(string source, string destination, string timeDate)
         {
-            Connections connectionList = transport.GetConnections(source, destination, dateTimePicker.Text, timeTxtBox.Text);
+            Connections connectionList = transport.GetConnections(source, destination, dateTimePicker.Text, timeTxtBox.Text, limit);
 
             resultsDGV.Rows.Clear();
             resultsDGV.Columns.Clear();
@@ -84,39 +115,36 @@ namespace AskSBB
 
             string[] dgv_columns = new string[] { "Von", "Nach", "Abfahrt", "Ankunft", "Gleis", "Dauer" };
 
-            foreach(string col in dgv_columns)
+            foreach (string col in dgv_columns)
             {
                 resultsDGV.Columns.Add(col, col);
             }
 
-            foreach(Connection c in connectionList.ConnectionList)
+            foreach (Connection c in connectionList.ConnectionList)
             {
                 int row = resultsDGV.Rows.Add();
-
-                string departure = c.From.Departure;
-                string arrival = c.To.Arrival;
-                string duration = c.Duration;
 
                 string[] conValues = new string[]
                 {
                     c.From.Station.Name,
                     c.To.Station.Name,
-                    departure,
-                    arrival,
+                    DateTime.Parse(c.From.Departure).ToString("HH:mm"),
+                    DateTime.Parse(c.To.Arrival).ToString("HH:mm"),
                     c.From.Platform,
-                    duration
+                    c.Duration.Substring(3,5),
                 };
 
-                for(int i = 0; i < conValues.Count(); i++)
+                for (int i = 0; i < conValues.Count(); i++)
                 {
                     resultsDGV.Rows[row].Cells[i].Value = conValues[i];
                 }
             }
         }
 
+        // Funktion ShowDepartures - Liefert Resultate ins Grid für den Stationsfahrplan
         private void ShowDepartures(string source)
         {
-            Connections connectionList = transport.GetConnections(source, fixDestination, dateTimePicker.Text, timeTxtBox.Text);
+            Connections connectionList = transport.GetConnections(source, fixDestination, dateTimePicker.Text, timeTxtBox.Text, limit);
 
             if (fixDestination == "Ebikon,St.Klemens")
             {
@@ -135,24 +163,23 @@ namespace AskSBB
 
             resultsDGV.AutoSize = true;
 
-            string[] dgv_columns = new string[] { "Von", "Nach", "Abfahrt", "Ankunft", "Gleis", "Dauer" };
+            string[] dgv_columns = new string[] { "Abfahrt", "Gleis", "Nach", "Zugtyp", "Transportverbund" };
 
             foreach (string col in dgv_columns)
             {
                 resultsDGV.Columns.Add(col, col);
             }
 
-            foreach(StationBoard stat in stationBoardList.Entries)
+            foreach (StationBoard stat in stationBoardList.Entries)
             {
                 int row = resultsDGV.Rows.Add();
 
                 string[] statValues = new string[]
                 {
-                    stat.Name,
+                    stat.Stop.Departure.ToShortTimeString(),
+                    stat.Number,
                     stat.To,
                     stat.Category,
-                    stat.Number,
-                    stat.Stop.Departure.ToString(),
                     stat.Operator
                 };
 
@@ -164,9 +191,10 @@ namespace AskSBB
 
         }
 
+        // Checkboxen Checks und Errormeldungen
         private void CheckString(string check)
         {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(check, "^[a-zA-Z]"))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(check, "^[a-zA-Z,]"))
             {
                 Errors(1);
             }
