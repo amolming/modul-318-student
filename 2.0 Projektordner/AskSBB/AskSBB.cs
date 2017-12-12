@@ -88,10 +88,19 @@ namespace AskSBB
             timeTxtBox.Text = DateTime.Now.ToShortTimeString();
             dateTimePicker.Text = DateTime.Now.ToLongDateString();
             connectionsRdoBtn.Checked = true;
+            chooseLstBox.Visible = false;
+            resultsDGV.Rows.Clear();
+            resultsDGV.Refresh();
+        }
+
+
+        private void closeBtn_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         // Funktion ShowStations - Sucht Stationen
-    private void ShowStations(string searchQuery)
+        private void ShowStations(string searchQuery)
         {
             Stations stationList = transport.GetStations(searchQuery);
 
@@ -113,7 +122,7 @@ namespace AskSBB
 
             resultsDGV.AutoSize = true;
 
-            string[] dgv_columns = new string[] { "Von", "Nach", "Abfahrt", "Ankunft", "Gleis", "Dauer" };
+            string[] dgv_columns = new string[] { "Von", "Nach", "Abfahrt", "Ankunft", "Gleis/Perron", "Dauer" };
 
             foreach (string col in dgv_columns)
             {

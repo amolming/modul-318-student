@@ -43,6 +43,7 @@
             this.tableRdoBtn = new System.Windows.Forms.RadioButton();
             this.connectionsRdoBtn = new System.Windows.Forms.RadioButton();
             this.resetBtn = new System.Windows.Forms.Button();
+            this.closeBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.resultsDGV)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -104,7 +105,7 @@
             // 
             // searchBtn
             // 
-            this.searchBtn.Location = new System.Drawing.Point(565, 141);
+            this.searchBtn.Location = new System.Drawing.Point(565, 119);
             this.searchBtn.Margin = new System.Windows.Forms.Padding(2);
             this.searchBtn.Name = "searchBtn";
             this.searchBtn.Size = new System.Drawing.Size(76, 28);
@@ -184,7 +185,7 @@
             // 
             // resetBtn
             // 
-            this.resetBtn.Location = new System.Drawing.Point(565, 194);
+            this.resetBtn.Location = new System.Drawing.Point(565, 151);
             this.resetBtn.Margin = new System.Windows.Forms.Padding(2);
             this.resetBtn.Name = "resetBtn";
             this.resetBtn.Size = new System.Drawing.Size(76, 28);
@@ -193,11 +194,23 @@
             this.resetBtn.UseVisualStyleBackColor = true;
             this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
             // 
+            // closeBtn
+            // 
+            this.closeBtn.Location = new System.Drawing.Point(565, 194);
+            this.closeBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.closeBtn.Name = "closeBtn";
+            this.closeBtn.Size = new System.Drawing.Size(76, 28);
+            this.closeBtn.TabIndex = 15;
+            this.closeBtn.Text = "Exit";
+            this.closeBtn.UseVisualStyleBackColor = true;
+            this.closeBtn.Click += new System.EventHandler(this.closeBtn_Click);
+            // 
             // AskSBB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(696, 470);
+            this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.resultsDGV);
@@ -212,7 +225,7 @@
             this.Controls.Add(this.toLbl);
             this.Controls.Add(this.fromLbl);
             this.Name = "AskSBB";
-            this.Text = "Form1";
+            this.Text = "AskSBB";
             ((System.ComponentModel.ISupportInitialize)(this.resultsDGV)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -238,6 +251,7 @@
         private System.Windows.Forms.RadioButton tableRdoBtn;
         private System.Windows.Forms.RadioButton connectionsRdoBtn;
         private System.Windows.Forms.Button resetBtn;
+        private System.Windows.Forms.Button closeBtn;
     }
 }
 
